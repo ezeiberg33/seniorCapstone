@@ -45,10 +45,11 @@ IO.setup(GPIO_num,IO.IN,IO.PUD_UP)
 
 pca = Servo_Motor_Initialization()
 #Motor_Start(pca)
-Motor_Speed(pca, .2)
+Motor_Speed(pca, .14)
+sleep(2)
 
 last_pin_val = 1
-run_time = 5
+run_time = 3
 start_time = time.time()
 times = []
 speeds = []
@@ -56,7 +57,8 @@ prev_magnet_time = start_time
 new_magnet_time = 0
 distance = math.pi*0.0711
 changeTime = .5
-
+n = 0
+i = 0
 while time.time() - start_time < run_time:
     curr_pin_val = IO.input(GPIO_num)
     if curr_pin_val == 0 and last_pin_val == 1:
@@ -65,8 +67,7 @@ while time.time() - start_time < run_time:
         speeds.append(distance/dt)
         times.append(new_magnet_time-start_time)
         prev_magnet_time = new_magnet_time
-    last_pin_val = curr_pin_val
-
+        last_pin_val = curr_pin_val
 Motor_Speed(pca, 0)
 print(statistics.mean(speeds))
 

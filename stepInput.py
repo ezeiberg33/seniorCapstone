@@ -89,7 +89,7 @@ if x == '1':
     plt.ylabel('Speed (m/s)')
     plt.savefig(title)
 
-    with open('speeds.txt', 'w+') as f:
+    with open('speeds_down.txt', 'w+') as f:
     
     # write elements of list
     	for items in speeds:
@@ -101,7 +101,7 @@ if x == '1':
 	# close the file
     f.close()
 
-    with open('times.txt', 'w+') as f:
+    with open('times_down.txt', 'w+') as f:
     
     # write elements of list
         for items in times:
