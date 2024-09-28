@@ -63,6 +63,8 @@ i = 0
 while time.time() - start_time < run_time:
     if i == 0:
         Motor_Speed(pca, 0.15)
+        times.append(0)
+        speeds.append(0)
         i = 1
     curr_pin_val = IO.input(GPIO_num)
     if curr_pin_val == 0 and last_pin_val == 1:
