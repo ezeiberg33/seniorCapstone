@@ -38,13 +38,12 @@ def Motor_Speed(pca,percent):
    print(speed/65535)
 
 runtime = 5
-magnet_detected = false
 start_time = time.time()
 times = []
 speeds = []
 prev_magnet_time = start_time
 new_magnet_time = 0
-distance = CHECK
+distance = math.pi*0.0711
 IO.setwarnings(False)
 IO.setmode(IO.BCM)
 
@@ -58,7 +57,7 @@ Motor_Speed(pca, 0.15)
 while time.time() - start_time < run_time:
     curr_pin_val = IO.input(GPIO_num)
     print(curr_pin_val)
-    if curr_pin_val = 0 and last_pin_val = 1:
+    if curr_pin_val == 0 and last_pin_val == 1:
         new_magnet_time = datetime.datetime.now()
         dt = new_magnet_time - prev_magnet_time
         speeds.append(distance/dt)
