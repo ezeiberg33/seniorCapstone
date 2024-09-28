@@ -48,8 +48,8 @@ IO.setup(GPIO_num,IO.IN,IO.PUD_UP)
 pca = Servo_Motor_Initialization()
 #Motor_Start(pca)
 Motor_Speed(pca, 0.15)
-sleep(1)
-Motor_Speed(pca, 0.13)
+#sleep(1)
+#Motor_Speed(pca, 0.13)
 
 last_pin_val = 1
 run_time = 5
