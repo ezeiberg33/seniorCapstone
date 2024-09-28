@@ -47,7 +47,7 @@ IO.setup(GPIO_num,IO.IN,IO.PUD_UP)
 
 pca = Servo_Motor_Initialization()
 #Motor_Start(pca)
-Motor_Speed(pca, 0.15)
+#Motor_Speed(pca, 0.15)
 #sleep(1)
 #Motor_Speed(pca, 0.13)
 
@@ -59,8 +59,11 @@ speeds = []
 prev_magnet_time = start_time
 new_magnet_time = 0
 distance = math.pi*0.0711
-
+i = 0
 while time.time() - start_time < run_time:
+    if i == 0:
+        Motor_Speed(pca, 0.15)
+        i = 1
     curr_pin_val = IO.input(GPIO_num)
     if curr_pin_val == 0 and last_pin_val == 1:
         new_magnet_time = time.time()
