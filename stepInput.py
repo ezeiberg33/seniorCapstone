@@ -1,6 +1,6 @@
 #Reading of 0 means magnet detected,
 #reading of 1 means no magnet detected
-
+import argparse
 import RPi.GPIO as IO
 import time
 import sys
@@ -16,6 +16,12 @@ from adafruit_pca9685 import PCA9685
 import adafruit_motor.servo
 import matplotlib
 import matplotlib.pyplot as plt
+
+parser = argparse.ArgumentParser(description='Data for this program.')
+parser.add_argument('--speed', action='store', type=float, default = 1,
+                    help = 'speed in meters per second')
+args = parser.parse_args()
+input_speed = args.speed
 
 def Servo_Motor_Initialization():
    i2c_bus = busio.I2C(SCL,SDA)
@@ -39,12 +45,18 @@ def Motor_Speed(pca,percent):
    pca.channels[15].duty_cycle = math.floor(speed)
    print(speed/65535)
 
+def calc_dc(speed):
+   dc = (speed+6.45)/54.6
+   print(dc)
+   return dc
+
 IO.setwarnings(False)
 IO.setmode(IO.BCM)
 
 GPIO_num = 16
 IO.setup(GPIO_num,IO.IN,IO.PUD_UP)
 
+dc = calc_dc(input_speed)
 pca = Servo_Motor_Initialization()
 
 last_pin_val = 1
@@ -59,7 +71,7 @@ prev_speed = 0
 i = 0
 while time.time() - start_time < run_time:
     if i == 0:
-        Motor_Speed(pca, 0.14)
+        Motor_Speed(pca, dc)
         times.append(0)
         speeds.append(0)
         i = 1
@@ -72,7 +84,7 @@ while time.time() - start_time < run_time:
         times.append(new_magnet_time-start_time)
         print(distance/dt)
         prev_magnet_time = new_magnet_time
-    else:
+    elif prev_speed == 0:
         speeds.append(prev_speed)
         times.append(time.time()-start_time)   
     last_pin_val = curr_pin_val
