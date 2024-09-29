@@ -32,33 +32,37 @@ def Motor_Start(pca):
    Motor_Speed(pca, -1)
    time.sleep(2)
    z = input("Now the LED should be in solid green, indicating the initialization is complete. Press 'ENTER' on keyboard to proceed")
+   
 
 def Motor_Speed(pca,percent):
    #converts a -1 to 1 value to 16-bit duty cycle
    speed = ((percent) * 3277) + 65535 * 0.15
    pca.channels[15].duty_cycle = math.floor(speed)
+   print(speed/65535)
+
 IO.setwarnings(False)
 IO.setmode(IO.BCM)
 
 GPIO_num = 16
 IO.setup(GPIO_num,IO.IN,IO.PUD_UP)
 
-pca = Servo_Motor_Initialization()
-#Motor_Start(pca)
-Motor_Speed(pca, .14)
-sleep(2)
-
 last_pin_val = 1
-run_time = 3
+run_time = 5
 start_time = time.time()
 times = []
 speeds = []
 prev_magnet_time = start_time
 new_magnet_time = 0
 distance = math.pi*0.0711
-changeTime = .5
-n = 0
-i = 0
+
+speeds.append(0)
+times.append(0)
+
+input = input('Enter duty cycle as decimal: ')
+pca = Servo_Motor_Initialization()
+#Motor_Start(pca)
+Motor_Speed(pca, input)
+
 while time.time() - start_time < run_time:
     curr_pin_val = IO.input(GPIO_num)
     if curr_pin_val == 0 and last_pin_val == 1:
@@ -66,20 +70,24 @@ while time.time() - start_time < run_time:
         dt = new_magnet_time - prev_magnet_time
         speeds.append(distance/dt)
         times.append(new_magnet_time-start_time)
+        print(distance/dt)
         prev_magnet_time = new_magnet_time
-        last_pin_val = curr_pin_val
+    else:
+       speeds.append(distance/dt)
+       times.append(time.time()-start_time)
+    last_pin_val = curr_pin_val
+
 Motor_Speed(pca, 0)
 print(statistics.mean(speeds))
-
-x = input('Press 1 to create speed vs. time figure')
-if x == '1':
-    title = input('Enter filename for the figure (w/ .png)') 
-    plt.clf()
-    plt.plot(times, speeds)
-    plt.grid(True)
-    plt.title('Car speed for 15% duty cycle')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Speed (m/s)')
-    plt.savefig(title)
+#x = input('Press 1 to create speed vs. time figure')
+#if x == '1':
+#    title = input('Enter filename for the figure (w/ .png)') 
+#    plt.clf()
+#    plt.plot(times, speeds)
+#    plt.grid(True)
+#    plt.title('Car speed for 15% duty cycle')
+#    plt.xlabel('Time (s)')
+#    plt.ylabel('Speed (m/s)')
+#    plt.savefig(title)
 
         
