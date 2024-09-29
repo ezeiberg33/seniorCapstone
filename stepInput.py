@@ -79,15 +79,14 @@ while time.time() - start_time < run_time:
     if curr_pin_val == 0 and last_pin_val == 1:
         new_magnet_time = time.time()
         dt = new_magnet_time - prev_magnet_time
+        if prev_speed == 0:
+            times.append(0)
+            speeds.append(0)
         prev_speed = distance/dt
         speeds.append(prev_speed)
         times.append(new_magnet_time-start_time)
         print(distance/dt)
-        prev_magnet_time = new_magnet_time
-    elif prev_speed == 0:
-        print('here')
-        speeds.append(prev_speed)
-        times.append(time.time()-start_time)   
+        prev_magnet_time = new_magnet_time   
     last_pin_val = curr_pin_val
 
 Motor_Speed(pca, 0)
