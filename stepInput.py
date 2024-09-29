@@ -85,6 +85,7 @@ while time.time() - start_time < run_time:
         print(distance/dt)
         prev_magnet_time = new_magnet_time
     elif prev_speed == 0:
+        print('here')
         speeds.append(prev_speed)
         times.append(time.time()-start_time)   
     last_pin_val = curr_pin_val
@@ -97,7 +98,7 @@ if x == '1':
     plt.clf()
     plt.plot(times, speeds)
     plt.grid(True)
-    plt.title('Car speed for 15% duty cycle')
+    plt.title('Car speed When Set to Drive at 1m/s')
     plt.xlabel('Time (s)')
     plt.ylabel('Speed (m/s)')
     plt.savefig(title)
