@@ -18,14 +18,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import statistics
 
-#initialize motor early so that the average speed does not include when the car is starting up
-input = input('Enter duty cycle as decimal: ')
-pca = Servo_Motor_Initialization()
-#Motor_Start(pca)
-Motor_Speed(pca, 0.15)
-sleep(2)
-Motor_Speed(pca, input)
-sleep(2)
 
 def Servo_Motor_Initialization():
    i2c_bus = busio.I2C(SCL,SDA)
@@ -49,6 +41,15 @@ def Motor_Speed(pca,percent):
    pca.channels[15].duty_cycle = math.floor(speed)
    print(speed/65535)
 
+#initialize motor early so that the average speed does not include when the car>
+input = float(input('Enter duty cycle as decimal: '))
+pca = Servo_Motor_Initialization()
+#Motor_Start(pca)
+Motor_Speed(pca, 0.15)
+sleep(.5)
+Motor_Speed(pca, input)
+sleep(2)
+
 IO.setwarnings(False)
 IO.setmode(IO.BCM)
 
@@ -63,6 +64,7 @@ speeds = []
 prev_magnet_time = start_time
 new_magnet_time = 0
 distance = math.pi*0.0711
+prev_speed = 0
 
 speeds.append(0)
 times.append(0)
@@ -74,12 +76,13 @@ while time.time() - start_time < run_time:
     if curr_pin_val == 0 and last_pin_val == 1:
         new_magnet_time = time.time()
         dt = new_magnet_time - prev_magnet_time
-        speeds.append(distance/dt)
+        prev_speed = distance/dt
+        speeds.append(prev_speed)
         times.append(new_magnet_time-start_time)
         print(distance/dt)
         prev_magnet_time = new_magnet_time
     else:
-       speeds.append(distance/dt)
+       speeds.append(prev_speed)
        times.append(time.time()-start_time)
     last_pin_val = curr_pin_val
 
