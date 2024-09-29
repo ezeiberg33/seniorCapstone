@@ -55,6 +55,7 @@ speeds = []
 prev_magnet_time = start_time
 new_magnet_time = 0
 distance = math.pi*0.0711
+prev_speed = 0
 i = 0
 while time.time() - start_time < run_time:
     if i == 0:
@@ -66,12 +67,13 @@ while time.time() - start_time < run_time:
     if curr_pin_val == 0 and last_pin_val == 1:
         new_magnet_time = time.time()
         dt = new_magnet_time - prev_magnet_time
-        speeds.append(distance/dt)
+        prev_speed = distance/dt
+        speeds.append(prev_speed)
         times.append(new_magnet_time-start_time)
         print(distance/dt)
         prev_magnet_time = new_magnet_time
     else:
-	speeds.append(distance/dt)
+        speeds.append(prev_speed)
         times.append(time.time()-start_time)   
     last_pin_val = curr_pin_val
 

@@ -1,6 +1,6 @@
 #Reading of 0 means magnet detected,
 #reading of 1 means no magnet detected
-import sys
+import argparse
 import RPi.GPIO as IO
 import time
 import sys
@@ -16,6 +16,13 @@ from adafruit_pca9685 import PCA9685
 import adafruit_motor.servo
 import matplotlib
 import matplotlib.pyplot as plt
+
+parser = argparse.ArgumentParser(description='Data for this program.')
+parser.add_argument('--speed', action='store', type=float, default = 1,
+                    help = 'speed in meters per second')
+args = parser.parse_args()
+input_speed = args.speed
+
 
 def Servo_Motor_Initialization():
    i2c_bus = busio.I2C(SCL,SDA)
@@ -51,9 +58,8 @@ IO.setmode(IO.BCM)
 GPIO_num = 16
 IO.setup(GPIO_num,IO.IN,IO.PUD_UP)
 
-input_speed = sys.argv
-dc = calc_dc(input_speed)
 
+dc = calc_dc(input_speed)
 pca = Servo_Motor_Initialization()
 Motor_Speed(pca, dc)
 
