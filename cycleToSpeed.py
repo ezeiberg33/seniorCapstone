@@ -18,6 +18,15 @@ import matplotlib
 import matplotlib.pyplot as plt
 import statistics
 
+#initialize motor early so that the average speed does not include when the car is starting up
+input = input('Enter duty cycle as decimal: ')
+pca = Servo_Motor_Initialization()
+#Motor_Start(pca)
+Motor_Speed(pca, 0.15)
+sleep(2)
+Motor_Speed(pca, input)
+sleep(2)
+
 def Servo_Motor_Initialization():
    i2c_bus = busio.I2C(SCL,SDA)
    pca = PCA9685(i2c_bus)
@@ -58,10 +67,7 @@ distance = math.pi*0.0711
 speeds.append(0)
 times.append(0)
 
-input = input('Enter duty cycle as decimal: ')
-pca = Servo_Motor_Initialization()
-#Motor_Start(pca)
-Motor_Speed(pca, input)
+
 
 while time.time() - start_time < run_time:
     curr_pin_val = IO.input(GPIO_num)
