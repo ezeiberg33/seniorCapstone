@@ -81,7 +81,7 @@ while time.time() - start_time < run_time:
         dt = new_magnet_time - prev_magnet_time
         if prev_speed == 0:
             times.append(0)
-            speeds.append(0)
+            speeds.append(new_magnet_time)
         prev_speed = distance/dt
         speeds.append(prev_speed)
         times.append(new_magnet_time-start_time)
