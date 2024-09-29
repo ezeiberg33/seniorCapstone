@@ -46,10 +46,6 @@ GPIO_num = 16
 IO.setup(GPIO_num,IO.IN,IO.PUD_UP)
 
 pca = Servo_Motor_Initialization()
-#Motor_Start(pca)
-#Motor_Speed(pca, 0.15)
-#sleep(1)
-#Motor_Speed(pca, 0.13)
 
 last_pin_val = 1
 run_time = 5
@@ -62,7 +58,7 @@ distance = math.pi*0.0711
 i = 0
 while time.time() - start_time < run_time:
     if i == 0:
-        Motor_Speed(pca, 0.15)
+        Motor_Speed(pca, 0.14)
         times.append(0)
         speeds.append(0)
         i = 1
@@ -74,6 +70,9 @@ while time.time() - start_time < run_time:
         times.append(new_magnet_time-start_time)
         print(distance/dt)
         prev_magnet_time = new_magnet_time
+    else:
+	speeds.append(distance/dt)
+        times.append(time.time()-start_time)   
     last_pin_val = curr_pin_val
 
 Motor_Speed(pca, 0)
@@ -89,26 +88,15 @@ if x == '1':
     plt.ylabel('Speed (m/s)')
     plt.savefig(title)
 
-    with open('speeds_down.txt', 'w+') as f:
-    
-    # write elements of list
+    with open('speeds.txt', 'w+') as f:
     	for items in speeds:
         	f.write('%s\n' %items)
-    
     	print("File written successfully")
-
-
-	# close the file
     f.close()
 
-    with open('times_down.txt', 'w+') as f:
-    
-    # write elements of list
+    with open('times.txt', 'w+') as f:
         for items in times:
                 f.write('%s\n' %items)
     
         print("File written successfully")
-
-
-        # close the file
     f.close()
