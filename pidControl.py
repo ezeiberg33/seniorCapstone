@@ -122,7 +122,7 @@ if x == '1':
     plt.clf()
     plt.plot(times, speeds)
     plt.grid(True)
-    plt.title('Car Speed Overtime)
+    plt.title('Car Speed Overtime')
     plt.xlabel('Time (s)')
     plt.ylabel('Speed (m/s)')
     plt.savefig(title)
