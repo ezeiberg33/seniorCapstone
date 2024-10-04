@@ -1,6 +1,6 @@
 #Reading of 0 means magnet detected,
 #reading of 1 means no magnet detected
-
+import argparse
 import RPi.GPIO as IO
 import time
 import sys
@@ -16,7 +16,21 @@ from adafruit_pca9685 import PCA9685
 import adafruit_motor.servo
 import matplotlib
 import matplotlib.pyplot as plt
-import statistics
+
+parser = argparse.ArgumentParser(description='Data for this program.')
+parser.add_argument('--speed', action='store', type=float, default = 1,
+                    help = 'speed in meters per second')
+parser.add_argument('--P', action='store', type=float, default = 1,
+                    help = 'Proportional gain')
+parser.add_argument('--I', action='store', type=float, default = 1,
+                    help = 'Integral gain')
+parser.add_argument('--D', action='store', type=float, default = 1,
+                    help = 'Derivitive gain')
+args = parser.parse_args()
+input_speed = args.speed
+Kp = args.P
+Ki = args.I
+Kd = args.D
 
 
 def Servo_Motor_Initialization():
@@ -41,23 +55,35 @@ def Motor_Speed(pca,percent):
    pca.channels[15].duty_cycle = math.floor(speed)
    print(speed/65535)
 
-def Get_Error(curr_speed,target_speed):
-  error = 
+def calc_dc(speed):
+   dc = (speed+6.45)/54.6
+   print(dc)
+   return dc
 
-#initialize motor early so that the average speed does not include when the car>
-input = float(input('Enter duty cycle as decimal: '))
-pca = Servo_Motor_Initialization()
-#Motor_Start(pca)
-Motor_Speed(pca, 0.15)
-sleep(.5)
-Motor_Speed(pca, input)
-sleep(2)
+def get_error(curr_speed, target_speed, acc_error, dt)
+   error = target_speed - curr_speed
+   all_error.append(error)
+   acc_error = acc_error+error*dt
+   d_error = (error - all_error[-2])/dt
+   return error, acc_error, d_error
+
+def PIDControl(Kp, Ki, Kd, error, acc_error, d_error)
+   dP = Kp*error
+   dI = Ki*acc_error
+   dD = Kd*d_error
+   newSpeed = dP+dI+dD
+   
 
 IO.setwarnings(False)
 IO.setmode(IO.BCM)
 
 GPIO_num = 16
 IO.setup(GPIO_num,IO.IN,IO.PUD_UP)
+
+
+dc = calc_dc(input_speed)
+pca = Servo_Motor_Initialization()
+Motor_Speed(pca, dc)
 
 last_pin_val = 1
 run_time = 5
@@ -67,39 +93,38 @@ speeds = []
 prev_magnet_time = start_time
 new_magnet_time = 0
 distance = math.pi*0.0711
-prev_speed = 0
-
-speeds.append(0)
-times.append(0)
-
-
+all_error = [] #all error calculations
+acc_error = 0 #accumulated error
+newSpeed = 0
+newDC = dc
 
 while time.time() - start_time < run_time:
     curr_pin_val = IO.input(GPIO_num)
+    Motor_Speed(pca, newDC)
     if curr_pin_val == 0 and last_pin_val == 1:
         new_magnet_time = time.time()
         dt = new_magnet_time - prev_magnet_time
-        prev_speed = distance/dt
-        speeds.append(prev_speed)
+        curr_speed = distance/dt
+        speeds.append(curr_speed)
         times.append(new_magnet_time-start_time)
-        print(distance/dt)
+        error, acc_error, d_error = get_error(curr_speed, input_speed, acc_error, dt)
+        newSpeed = PIDControl(Kp, Ki, Kd, error, acc_error, d_error)
+        newDC = calc_dc(newSpeed):
+        Motor_Speed(pca, newDC)
         prev_magnet_time = new_magnet_time
-    else:
-       speeds.append(prev_speed)
-       times.append(time.time()-start_time)
     last_pin_val = curr_pin_val
 
 Motor_Speed(pca, 0)
-print(statistics.mean(speeds))
-#x = input('Press 1 to create speed vs. time figure')
-#if x == '1':
-#    title = input('Enter filename for the figure (w/ .png)') 
-#    plt.clf()
-#    plt.plot(times, speeds)
-#    plt.grid(True)
-#    plt.title('Car speed for 15% duty cycle')
-#    plt.xlabel('Time (s)')
-#    plt.ylabel('Speed (m/s)')
-#    plt.savefig(title)
+
+x = input('Press 1 to create speed vs. time figure')
+if x == '1':
+    title = 'Kp'+ str(Kp) + 'Kd' + str(Kd) + 'Ki' + str(Ki) + '.png'
+    plt.clf()
+    plt.plot(times, speeds)
+    plt.grid(True)
+    plt.title('Car Speed Overtime)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Speed (m/s)')
+    plt.savefig(title)
 
         
