@@ -60,14 +60,14 @@ def calc_dc(speed):
    print(dc)
    return dc
 
-def get_error(curr_speed, target_speed, acc_error, dt)
+def get_error(curr_speed, target_speed, acc_error, dt):
    error = target_speed - curr_speed
    all_error.append(error)
    acc_error = acc_error+error*dt
    d_error = (error - all_error[-2])/dt
    return error, acc_error, d_error
 
-def PIDControl(Kp, Ki, Kd, error, acc_error, d_error)
+def PIDControl(Kp, Ki, Kd, error, acc_error, d_error):
    dP = Kp*error
    dI = Ki*acc_error
    dD = Kd*d_error
