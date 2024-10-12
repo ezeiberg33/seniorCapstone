@@ -56,7 +56,6 @@ def Motor_Speed(pca,percent):
 
 def calc_dc(speed):
    dc = (speed+7.26)/72.1
-   print(dc)
    return dc
 
 def get_error(curr_speed, target_speed, acc_error, dt):
@@ -107,8 +106,9 @@ while time.time() - start_time < run_time:
         speeds.append(curr_speed)
         times.append(new_magnet_time-start_time)
         error, acc_error, d_error = get_error(curr_speed, input_speed, acc_error, dt)
+        print(error)
         newSpeed = PIDControl(Kp, Ki, Kd, error, acc_error, d_error)
-        newDC = calc_dc(newSpeed)
+        newDC = calc_dc(curr_speed+newSpeed)
         Motor_Speed(pca, newDC)
         prev_magnet_time = new_magnet_time
     last_pin_val = curr_pin_val
