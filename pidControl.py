@@ -55,7 +55,7 @@ def Motor_Speed(pca,percent):
    #print(speed/65535)
 
 def calc_dc(speed):
-   dc = (speed+6.45)/54.6
+   dc = (speed+7.26)/72.1
    print(dc)
    return dc
 
