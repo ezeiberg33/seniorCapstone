@@ -87,6 +87,7 @@ while time.time() - start_time < run_time:
     last_pin_val = curr_pin_val
 
 Motor_Speed(pca, 0)
+print('done')
 print(statistics.mean(speeds))
 #x = input('Press 1 to create speed vs. time figure')
 #if x == '1':

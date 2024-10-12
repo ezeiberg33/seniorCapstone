@@ -18,7 +18,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser(description='Data for this program.')
-parser.add_argument('--speed', action='store', type=float, default = 1,
+parser.add_argument('--speed', action='store', type=float, default = 0.11,
                     help = 'speed in meters per second')
 parser.add_argument('--P', action='store', type=float, default = 1,
                     help = 'Proportional gain')
@@ -47,13 +47,12 @@ def Motor_Start(pca):
    Motor_Speed(pca, -1)
    time.sleep(2)
    z = input("Now the LED should be in solid green, indicating the initialization is complete. Press 'ENTER' on keyboard to proceed")
-   
 
 def Motor_Speed(pca,percent):
    #converts a -1 to 1 value to 16-bit duty cycle
    speed = ((percent) * 3277) + 65535 * 0.15
    pca.channels[15].duty_cycle = math.floor(speed)
-   print(speed/65535)
+   #print(speed/65535)
 
 def calc_dc(speed):
    dc = (speed+6.45)/54.6
@@ -72,7 +71,7 @@ def PIDControl(Kp, Ki, Kd, error, acc_error, d_error):
    dI = Ki*acc_error
    dD = Kd*d_error
    newSpeed = dP+dI+dD
-   
+   return newSpeed
 
 IO.setwarnings(False)
 IO.setmode(IO.BCM)
@@ -93,7 +92,7 @@ speeds = []
 prev_magnet_time = start_time
 new_magnet_time = 0
 distance = math.pi*0.0711
-all_error = [] #all error calculations
+all_error = [0] #all error calculations
 acc_error = 0 #accumulated error
 newSpeed = 0
 newDC = dc
@@ -109,7 +108,7 @@ while time.time() - start_time < run_time:
         times.append(new_magnet_time-start_time)
         error, acc_error, d_error = get_error(curr_speed, input_speed, acc_error, dt)
         newSpeed = PIDControl(Kp, Ki, Kd, error, acc_error, d_error)
-        newDC = calc_dc(newSpeed):
+        newDC = calc_dc(newSpeed)
         Motor_Speed(pca, newDC)
         prev_magnet_time = new_magnet_time
     last_pin_val = curr_pin_val
