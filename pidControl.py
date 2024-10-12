@@ -127,3 +127,7 @@ if x == '1':
     plt.savefig(title)
 
         
+print(times)
+print('-')
+print(speeds)
+
