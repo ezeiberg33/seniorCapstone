@@ -131,6 +131,23 @@ if x == '1':
     plt.ylabel('Speed (m/s)')
     plt.savefig(title)
 
+x = input('Press 1 to write speeds to a file')
+if x == '1':
+    title_speed = 'SKp'+ str(Kp) + 'Kd' + str(Kd) + 'Ki' + str(Ki) + '.txt'
+    title_time = 'TKp'+ str(Kp) + 'Kd' + str(Kd) + 'Ki' + str(Ki) + '.txt'
+    with open(title, 'w+') as f:
+    	for items in speeds:
+        	f.write('%s\n' %items)
+    	print("File written successfully")
+    f.close()
+
+    with open(title_time, 'w+') as f:
+        for items in times:
+                f.write('%s\n' %items)
+    
+        print("File written successfully")
+    f.close()
+
         
 print(times)
 print('-')
