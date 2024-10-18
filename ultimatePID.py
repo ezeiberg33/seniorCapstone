@@ -22,9 +22,9 @@ parser.add_argument('--speed', action='store', type=float, default = 2,
                     help = 'speed in meters per second')
 parser.add_argument('--P', action='store', type=float, default = 1,
                     help = 'Proportional gain')
-parser.add_argument('--I', action='store', type=float, default = 1,
+parser.add_argument('--I', action='store', type=float, default = 0,
                     help = 'Integral gain')
-parser.add_argument('--D', action='store', type=float, default = 1,
+parser.add_argument('--D', action='store', type=float, default = 0,
                     help = 'Derivitive gain')
 args = parser.parse_args()
 input_speed = args.speed
