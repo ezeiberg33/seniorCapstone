@@ -116,6 +116,17 @@ while time.time() - start_time < run_time:
         newDC = calc_dc(curr_speed+newSpeed)
         Motor_Speed(pca, newDC)
         prev_magnet_time = new_magnet_time
+    elif time.time() - prev_magnet_time > 0.5:
+        new_magnet_time = time.time()
+        speeds.append(0)
+        times.append(new_magnet_time-start_time)
+        curr_speed = 0
+        error, acc_error, d_error = get_error(curr_speed, input_speed, acc_error, dt)
+        print(error)
+        newSpeed = PIDControl(Kp, Ti, Td, error, acc_error, d_error)
+        newDC = calc_dc(curr_speed+newSpeed)
+        Motor_Speed(pca, newDC)
+        prev_magnet_time = new_magnet_time
     last_pin_val = curr_pin_val
 
 Motor_Speed(pca, 0)
