@@ -18,7 +18,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser(description='Data for this program.')
-parser.add_argument('--speed', action='store', type=float, default = 0.11,
+parser.add_argument('--speed', action='store', type=float, default = 2,
                     help = 'speed in meters per second')
 parser.add_argument('--P', action='store', type=float, default = 1,
                     help = 'Proportional gain')
