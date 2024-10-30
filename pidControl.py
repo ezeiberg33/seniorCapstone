@@ -50,7 +50,10 @@ def Motor_Start(pca):
 
 def Motor_Speed(pca,percent):
    #converts a -1 to 1 value to 16-bit duty cycle
+   print(pca)
+   print(percent)
    speed = ((percent) * 3277) + 65535 * 0.15
+   print(speed)
    pca.channels[15].duty_cycle = math.floor(speed)
    #print(speed/65535)
 
@@ -106,7 +109,7 @@ while time.time() - start_time < run_time:
         speeds.append(curr_speed)
         times.append(new_magnet_time-start_time)
         error, acc_error, d_error = get_error(curr_speed, input_speed, acc_error, dt)
-        print(error)
+        #print(error)
         newSpeed = PIDControl(Kp, Ki, Kd, error, acc_error, d_error)
         newDC = calc_dc(curr_speed+newSpeed)
         Motor_Speed(pca, newDC)
@@ -130,4 +133,5 @@ if x == '1':
 print(times)
 print('-')
 print(speeds)
+
 
